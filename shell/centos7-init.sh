@@ -1,3 +1,5 @@
+#!/bin/bash
+
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
 curl https://repo.huaweicloud.com/repository/conf/CentOS-7-reg.repo > /etc/yum.repos.d/CentOS-Base.repo
 yum makecache
