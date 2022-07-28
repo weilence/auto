@@ -79,6 +79,8 @@ function start_menu() {
             set_fcitx
             start_menu
             ;;
+        5)
+            ;;
         *)
             echo "输入错误"
             read -s -n1 -p "按任意键继续 ... "
