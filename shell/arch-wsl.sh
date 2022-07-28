@@ -27,21 +27,23 @@ function set_chinese() {
 
 function set_fcitx() {
     pacman -S fcitx5-im fcitx5-chinese-addons wqy-microhei --noconfirm
-    echo '
-        if [ -z "$(ps -aux | grep /usr/bin/dbus-daemon | grep -v grep)" ]; then
-            daemonize -e /tmp/dbus-${USER}.log -o /tmp/dbus-${USER}.log -p /tmp/dbus-${USER}.pid -l /tmp/dbus-${USER}.pid -a /usr/bin/dbus-daemon --address="unix:path=$XDG_RUNTIME_DIR/bus" --session --nofork  >>/dev/null 2>&1
-        fi
+    if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+        echo -e '
+        \rif [ -z "$(ps -aux | grep /usr/bin/dbus-daemon | grep -v grep)" ]; then
+        \r    daemonize -e /tmp/dbus-${USER}.log -o /tmp/dbus-${USER}.log -p /tmp/dbus-${USER}.pid -l /tmp/dbus-${USER}.pid -a /usr/bin/dbus-daemon --address="unix:path=$XDG_RUNTIME_DIR/bus" --session --nofork  >>/dev/null 2>&1
+        \rfi
 
-        if [ -z "$(ps -aux | grep /usr/bin/fcitx5 | grep -v grep)" ]; then
-            daemonize -e /tmp/fcitx5.log -o /tmp/fcitx5.log -p /tmp/fcitx5.pid -l /tmp/fcitx5.pid -a /usr/bin/fcitx5 --disable=wayland
-        fi
+        \rif [ -z "$(ps -aux | grep /usr/bin/fcitx5 | grep -v grep)" ]; then
+        \r    daemonize -e /tmp/fcitx5.log -o /tmp/fcitx5.log -p /tmp/fcitx5.pid -l /tmp/fcitx5.pid -a /usr/bin/fcitx5 --disable=wayland
+        \rfi
 
-        export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
-        export INPUT_METHOD=fcitx
-        export GTK_IM_MODULE=fcitx
-        export QT_IM_MODULE=fcitx
-        export XMODIFIERS=@im=fcitx
-    ' >> /etc/profile
+        \rexport DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+        \rexport INPUT_METHOD=fcitx
+        \rexport GTK_IM_MODULE=fcitx
+        \rexport QT_IM_MODULE=fcitx
+        \rexport XMODIFIERS=@im=fcitx' >> /etc/profile
+    source /etc/profile
+    fi
 }
 
 function start_menu() {
