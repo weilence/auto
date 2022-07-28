@@ -42,7 +42,7 @@ function set_fcitx() {
         \rexport GTK_IM_MODULE=fcitx
         \rexport QT_IM_MODULE=fcitx
         \rexport XMODIFIERS=@im=fcitx' >> /etc/profile
-    source /etc/profile
+        source /etc/profile
     fi
 }
 
