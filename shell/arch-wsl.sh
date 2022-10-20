@@ -1,5 +1,19 @@
 #!/bin/bash
 
+function ignore_windows_path() {
+    cat >> /etc/wsl.conf <<EOF
+
+[interop]
+appendWindowsPath=false
+
+EOF
+}
+
+function install_oh_my_zsh() {
+    pacman -Suy --noconfirm zsh git
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
+
 function update_mirror() {
     cp -a /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
     echo 'Server = https://repo.huaweicloud.com/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
@@ -50,15 +64,17 @@ export XMODIFIERS=@im=fcitx
 function start_menu() {
     clear
     echo -e "请选择你要执行的操作
-0. 以下我全都要
+0. 一键安装 1-4
 --------------
 1. 更新包管理源
-2. 安装yay
-3. 设置中文环境
-4. 设置输入法
+2. 设置中文环境
+3. WSL2去掉Windows的\$PATH环境
+4. 安装oh my zsh
+5. 安装yay
+6. 设置输入法
 --------------
-5. 退出"
-    read -p "请输入数字 [0-4]: " num
+7. 退出"
+    read -p "请输入数字 [0-5]: " num
     case $num in
         0)
             update_mirror
@@ -71,18 +87,26 @@ function start_menu() {
             start_menu
             ;;
         2)
-            install_yay
-            start_menu
-            ;;
-        3)
             set_chinese
             start_menu
             ;;
+        3)
+            ignore_windows_path
+            start_menu
+            ;;
         4)
-            set_fcitx
+            install_oh_my_zsh
             start_menu
             ;;
         5)
+            install_yay
+            start_menu
+            ;;
+        6)
+            set_fcitx
+            start_menu
+            ;;
+        7)
             ;;
         *)
             echo "输入错误"
