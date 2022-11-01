@@ -47,8 +47,8 @@
                     ],
                     "certificates": [
                         {
-                            "certificateFile": "/etc/nginx/cert.crt",
-                            "keyFile": "/etc/nginx/cert.key"
+                            "certificateFile": "__CRT__",
+                            "keyFile": "__KEY__"
                         }
                     ]
                 }
