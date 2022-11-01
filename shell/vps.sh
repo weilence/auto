@@ -21,36 +21,40 @@ install_nginx() {
     echo -e "${Info} 安装nginx"
     yum install -y epel-release
     yum install -y nginx
-    echo -e "安装 https 证书"
     systemctl enable nginx
-    systemctl restart nginx
-    start_menu
-}
-
-install_https() {
-    read -p "请输入邮箱: " email
-    read -p "请输入域名(example.com): " domain
-    curl https://get.acme.sh | sh -s email=$email
-    acme.sh --issue -d $domain --nginx
-    acme.sh --install-cert -d $domain \
-        --key-file /etc/nginx/ssl/$domain-key.pem \
-        --fullchain-file /etc/nginx/ssl/$domain-cert.pem \
-        --reloadcmd "systemctl restart nginx xray"
     systemctl restart nginx
     start_menu
 }
 
 install_xray() {
     echo -e "${Info} 安装脚本执行中..."
-    read -p "请输入UUID:" uuid
+    read -p "请输入UUID:" __UUID__
+    read -p "请输入域名(example.com): " domain
+
     bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
     mkdir -p /usr/local/etc/xray
     wget -O "/usr/local/share/xray/geosite.dat" https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
     wget -O "/usr/local/share/xray/geoip.dat" https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
+
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+    wget --no-check-certificate $github/config/nginx.conf -O /etc/nginx/nginx.conf
+    sed -i "s/__DOMAIN__/$domain/g" /etc/nginx/nginx.conf
+    systemctl restart nginx
+
+    openssl genrsa -des3 -passout pass:123456 -out /usr/local/etc/xray/$domain.key 1024
+    openssl req -passin pass:123456 -new -subj "/C=US/ST=WA/L=Oracle/O=Oracle/OU=Oracle/CN=$domain" -key /usr/local/etc/xray/$domain.key -out /usr/local/etc/xray/$domain.csr
+    mv /usr/local/etc/xray/$domain.key /usr/local/etc/xray/$domain.origin.key
+    openssl rsa -passin pass:123456 -in /usr/local/etc/xray/$domain.origin.key -out /usr/local/etc/xray/$domain.key
+    openssl x509 -req -days 18250 -in /usr/local/etc/xray/$domain.csr -signkey /usr/local/etc/xray/$domain.key -out /usr/local/etc/xray/$domain.crt
+
     wget --no-check-certificate $github/config/xray.json -O /usr/local/etc/xray/config.json
     sed -i "s/__UUID__/$uuid/g" /usr/local/etc/xray/config.json
+    sed -i "s/__CRT__/\/usr\/local\/etc\/xray\/$domain.crt/g" /usr/local/etc/xray/config.json
+    sed -i "s/__KEY__/\/usr\/local\/etc\/xray\/$domain.key/g" /usr/local/etc/xray/config.json
+
     systemctl enable xray
     systemctl restart xray
+
     start_menu
 }
 
@@ -61,7 +65,8 @@ start_menu() {
  ${Green_font_prefix}0.${Font_color_suffix} 更新自己
  ${Green_font_prefix}1.${Font_color_suffix} 关闭防火墙和SELinux
  ${Green_font_prefix}2.${Font_color_suffix} 修改sshd端口号
- ${Green_font_prefix}3.${Font_color_suffix} 安装 xray
+ ${Green_font_prefix}3.${Font_color_suffix} 安装 nginx
+ ${Green_font_prefix}4.${Font_color_suffix} 安装 xray
 ————————————————————————————————"
     read -p " 请输入数字 [0-14]:" num
     case "$num" in
@@ -86,9 +91,6 @@ start_menu() {
         install_nginx
         ;;
     4)
-        install_https
-        ;;
-    5)
         install_xray
         ;;
     *)
