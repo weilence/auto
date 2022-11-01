@@ -28,7 +28,7 @@ install_nginx() {
 
 install_xray() {
     echo -e "${Info} 安装脚本执行中..."
-    read -p "请输入UUID:" __UUID__
+    read -p "请输入UUID:" uuid
     read -p "请输入域名(example.com): " domain
 
     bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
