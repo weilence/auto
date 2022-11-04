@@ -42,8 +42,8 @@ install_xray() {
 
     wget --no-check-certificate $github/config/xray.json -O /usr/local/etc/xray/config.json
     sed -i "s/__UUID__/$uuid/g" /usr/local/etc/xray/config.json
-    sed -i "s/__CRT__/\/usr\/local\/etc\/xray\/$domain.crt/g" /usr/local/etc/xray/config.json
-    sed -i "s/__KEY__/\/usr\/local\/etc\/xray\/$domain.key/g" /usr/local/etc/xray/config.json
+    sed -i "s/__CRT__/\/usr\/local\/etc\/xray\/$domain-cert.pem/g" /usr/local/etc/xray/config.json
+    sed -i "s/__KEY__/\/usr\/local\/etc\/xray\/$domain-key.pem/g" /usr/local/etc/xray/config.json
 
     yum install -y socat
     systemctl stop nginx
