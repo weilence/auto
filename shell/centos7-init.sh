@@ -3,6 +3,7 @@
 function update_repo() {
     mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
     curl https://repo.huaweicloud.com/repository/conf/CentOS-7-reg.repo >/etc/yum.repos.d/CentOS-Base.repo
+    yum clean metadata
     yum makecache
     yum -y install epel-release
 }
@@ -14,6 +15,7 @@ function update_git() {
 }
 
 function install_oh_my_zsh() {
+    yum install -y zsh
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     # 安装zsh-autosuggestions插件
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -21,5 +23,5 @@ function install_oh_my_zsh() {
 }
 
 update_repo
-update_mirror
+update_git
 install_oh_my_zsh
