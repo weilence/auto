@@ -17,5 +17,7 @@ elif [[ "$SHELL" = *zsh ]]; then
     rc="$HOME/.zshrc"
 fi
 echo "${json}" >>"${rc}"
+# shellcheck disable=SC1090
+source "${rc}"
 npm config set registry https://registry.npmmirror.com
 echo "需要重新打开shell"
