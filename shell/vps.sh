@@ -101,7 +101,7 @@ start_menu() {
         ;;
     *)
         clear
-        echo -e "${Error}:请输入正确数字 [0-14]"
+        echo -e "${Error}:请输入正确数字 [0-4]"
         sleep 5s
         start_menu
         ;;
