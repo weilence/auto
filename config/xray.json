@@ -12,7 +12,7 @@
                 "clients": [
                     {
                         "id": "__UUID__",
-                        "flow": "xtls-rprx-direct"
+                        "flow": "xtls-rprx-vision"
                     }
                 ],
                 "decryption": "none",
@@ -40,8 +40,8 @@
             },
             "streamSettings": {
                 "network": "tcp",
-                "security": "xtls",
-                "xtlsSettings": {
+                "security": "tls",
+                "tlsSettings": {
                     "alpn": [
                         "http/1.1"
                     ],
