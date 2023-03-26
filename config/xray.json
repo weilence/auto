@@ -149,8 +149,15 @@
     ],
     "outbounds": [
         {
-            "protocol": "freedom",
-            "settings": {}
+          "protocol": "freedom",
+          "settings": {}
+        },
+        {
+          "protocol": "freedom",
+          "settings": {
+            "domainStrategy": "UseIPv4"
+          },
+          "tag": "ipv4-out"
         },
         {
             "protocol": "blackhole",
@@ -162,6 +169,13 @@
         "strategy": "rules",
         "settings": {
             "rules": [
+                {
+                    "type": "field",
+                    "domain": [
+                        "domain:google.com"
+                    ],
+                    "outboundTag": "ipv4-out"
+                },
                 {
                     "type": "field",
                     "domain": [
