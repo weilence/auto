@@ -8,13 +8,10 @@ dns:
   nameserver:
     - 'tls://8.8.4.4#dns'
     - 'tls://1.0.0.1#dns'
-  fallback: []
   fake-ip-filter:
     - '*'
     - '+.lan'
     - '+.local'
-    - '*.yamu.com'
-    - '*.ddi'
   proxy-server-nameserver:
     - https://doh.pub/dns-query
   nameserver-policy:
