@@ -5,7 +5,7 @@ CapsLock::
     if (KeyWait("CapsLock", "T0.5") == 1) {
         Send "^+{Space}"
     } else {
-        KeyWait "CapsLock"
         SetCapsLockState !GetKeyState("CapsLock", "T")
+        KeyWait "CapsLock"
     }
 }  
